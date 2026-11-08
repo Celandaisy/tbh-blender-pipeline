@@ -6,7 +6,7 @@
 > **状态更新（2026-11-05）**：相机同步部分已实测跑通（见姊妹篇 7.8–7.12）。
 > 本文的合成流程**尚未开始验证**，仍属设计稿；文中「待验证 / 待定」条目请勿当作结论。
 > **适用软件**：After Effects / Autograph（主）、Blender（3D 渲染侧）、Toon Boom Harmony（2D 渲染侧）
-> **姊妹篇**：《TBH25-Blender-摄像机同步-完整技术文档.md》——相机对齐看那份，本文只讲「对齐之后怎么把两层融成一张画」。
+> **姊妹篇**：相机对齐部分属于不公开的工具文档，本文只讲「对齐之后怎么把两层融成一张画」。
 
 ---
 
@@ -383,7 +383,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 - [80.lv · 2D 角色 3D 打光教程（Normality）](https://80.lv./articles/learn-how-to-set-up-3d-lighting-for-2d-characters-with-this-after-effects-tutorial)
 - [Autograph · Shadertoy 节点（GLSL + 相机 uniform）](https://help.maxon.net/ag/en-us/Content/html/Modifier_image_shadertoy.html)
 - [Normality 作者 Stefan Minning](https://3dcg.net/)
-- 姊妹篇：《TBH25-Blender-摄像机同步-完整技术文档.md》
+- 姊妹篇：相机对齐（工具文档，不公开）
 
 ---
 

@@ -11,56 +11,41 @@
 ## The problem 解决的问题
 
 Hand-drawn 2D characters need to live inside a 3D world: perspective, camera moves,
-depth of field, contact shadows. But animation is authored in a 2D tool, so the camera
-has to be authored there too.
+depth of field, contact shadows. But the animation is authored in a 2D tool, so the
+camera has to be authored there too.
 
 **手绘角色要放进 3D 世界**（透视、运镜、景深、接触阴影），但动画是在 2D 软件里做的——
 所以相机也必须在 2D 软件里定。
 
-This project bridges that: the Harmony camera is exported as matrices, converted into a
-Blender camera, and the 2D character is carried into Blender as a hidden proxy so that
-lighting and shadows line up.
+This project bridges the two: the Harmony camera is exported as data, reconstructed in
+Blender, and the 2D character is carried along as a hidden proxy so that lighting,
+shadows and depth line up with the drawing.
 
 ---
 
-## Result 效果
+## Result 结果
 
 | | |
 |---|---|
-| Camera accuracy | **0–1 px** over 10 frames, 5 conditions (move / translate / uniform scale / 3-axis rotation / animated FOV) |
-| Character position | **≤ 2.4 px** |
-| Verified on | Harmony 25 Premium 25.0.1 · Blender 5.2 LTS · AE 2025 |
+| Camera match | **0–1 px** over 10 frames, 5 conditions (dolly / translate / uniform scale / 3-axis rotation / animated FOV) |
+| Character match | **≤ 2.4 px** |
+| Verified on | Harmony 25 Premium · Blender 5.2 LTS · After Effects 2025 |
 
 ![Pipeline](docs/管线总览.png)
 
 ---
 
-## The formula 核心公式
-
-```
-M_rel = M_h⁻¹ · M_c                  # both from Harmony (OGL space)
-R, t, s = decompose(M_rel)           # drop s
-Blender camera = rotX(90°) @ [ R | t × 4.5 ]
-lens = 18 / ( tan(fov / 2) × aspect )  # fov = vertical FOV
-```
-
-- `4.5` is the OGL → scene scale constant (confirmed across projects and camera positions)
-- `fov` is the **vertical** field of view (Harmony "Vertical Fit")
-- the character proxy uses `rotX(90°) @ [ R_char | t_char × 4.5 ]`
-
-Full derivation and test records: [`docs/TBH25-Blender-摄像机同步-完整技术文档.md`](docs/TBH25-Blender-摄像机同步-完整技术文档.md)
-
----
-
-## Data 交换的数据
+## What flows between the apps 交换的数据
 
 | File | From | To | Contents |
 |---|---|---|---|
-| `camera.json` | Harmony | Blender | per-frame camera + model matrices, FOV, fps, resolution |
-| `character.json` | Harmony | Blender | per-frame character + model matrices |
+| `camera.json` | Harmony | Blender | per-frame camera + model transforms, FOV, fps, resolution |
+| `character.json` | Harmony | Blender | per-frame character + model transforms |
 | `light.json` | Blender | After Effects | per-frame light direction / position / colour / energy, character depth |
 
-Examples: [`samples/`](samples/)
+Format examples: [`samples/`](samples/)
+
+**How the transforms are converted is not documented here** (see below).
 
 ---
 
@@ -68,16 +53,16 @@ Examples: [`samples/`](samples/)
 
 **Beauty（组图）** — composited directly:
 
-- `env_beauty` (Blender Combined, with contact shadow baked in)
-- `char_color`, `char_line`, `char_eyes` (Harmony)
+- `env_beauty` — Blender Combined, contact shadow baked in
+- `char_color` / `char_line` / `char_eyes` — Harmony
 
 **Utility（改进）** — used as parameters, never colour-managed:
 
-- `env_depth`, `env_matte` (Blender)
-- `char_normal` (Harmony)
+- `env_depth`, `env_matte` — Blender
+- `char_normal` — Harmony
 - `light.json`
 
-See [`docs/管线总览.md`](docs/管线总览.md) and [`docs/AE合成清单.md`](docs/AE合成清单.md).
+More: [`docs/管线总览.md`](docs/管线总览.md) · [`docs/AE合成清单.md`](docs/AE合成清单.md)
 
 ---
 
@@ -91,32 +76,31 @@ See [`docs/管线总览.md`](docs/管线总览.md) and [`docs/AE合成清单.md`
 | [Blender出片设置](docs/Blender出片设置.md) | environment passes + EXR output |
 | [AE合成清单](docs/AE合成清单.md) | compositing checklist |
 | [色彩管理](docs/色彩管理.md) | linear workflow across all three apps |
-| [相机同步-加固清单](docs/相机同步-加固清单.md) | edge cases and test records |
-| [完整技术文档](docs/TBH25-Blender-摄像机同步-完整技术文档.md) | full derivation and verification |
+| [合成篇](docs/TBH-Blender-合成篇-完整技术文档.md) | how the two layers are merged |
 
 ---
 
 ## What is **not** included 不包含什么
 
-The tooling itself (Harmony export scripts, Blender add-ons, AE helper script) is
-**not public**. This repository documents the method, the data format and the results.
+- **The tooling** — Harmony export scripts, Blender add-ons, AE helper. Not public.
+- **The camera conversion method** — how Harmony transforms become a Blender camera.
+  This is the core of the tool and is not documented in this repository.
 
-工具本身（Harmony 导出脚本、Blender 插件、AE 辅助脚本）**不公开**。
-本仓库公开的是方法、数据格式和验证结果。
+工具本身、以及**相机换算的方法**，都不在本仓库里。
+这里公开的是：管线结构、数据格式、出片与合成流程、验证结果。
 
 ---
 
 ## Status 状态
 
-- ✅ Camera sync — verified
+- ✅ Camera match — verified on a real scene
 - ✅ Character proxy + contact shadow
 - ✅ Light data export
-- ⚠️ Full AOV pipeline — in progress (depth / matte / relight)
+- ⚠️ Full AOV pipeline (depth / matte / relight) — in progress
 - ⚠️ 1-minute test film — not yet
 
 ---
 
 ## License
 
-Documentation: [CC BY-NC 4.0](LICENSE) — 非商业使用，署名。
-The method described may be implemented freely; the documents may not be sold.
+Documentation: [CC BY-NC 4.0](LICENSE) — attribution, non-commercial.

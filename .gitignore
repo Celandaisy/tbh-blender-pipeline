@@ -1,0 +1,18 @@
+# 防止把工具误提交到公开仓库
+*.py
+*.jsx
+*.js
+!docs/**/*.js
+
+# 渲染 / 临时
+renders/
+*.exr
+*.mov
+*.mp4
+*.blend
+*.blend1
+
+# 系统
+Desktop.ini
+Thumbs.db
+.DS_Store

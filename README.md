@@ -6,6 +6,28 @@
 
 2D 角色 + 3D 环境的混合管线：**相机在 Harmony 里定，3D 环境在 Blender 里渲，最后在 AE 里合成**。
 
+![Test shot](docs/cover.jpg)
+
+*测试镜头：角色在 Harmony 渲染，环境在 Blender 渲染，用本管线对齐后合成。*
+
+---
+
+## Test shot 测试镜头
+
+一段 6 秒的测试：相机在 Harmony 里做动画，导出到 Blender 驱动 3D 环境，
+角色在 AE 里合成上去。
+
+▶ [看测试片段（samples/Comp.mp4）](samples/Comp.mp4)
+
+| | |
+|---|---|
+| 时长 | 6 秒 / 144 帧 @ 24fps |
+| 角色 | Harmony 渲染（EXR，带 alpha） |
+| 环境 | Blender 渲染（EEVEE） |
+| 合成 | After Effects |
+
+> 这是流程验证片，不是成品：还没有 AOV 分层、没有重打光、没有调色。
+
 ---
 
 ## The problem 解决的问题

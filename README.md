@@ -71,7 +71,6 @@ More: [`docs/管线总览.md`](docs/管线总览.md) · [`docs/AE合成清单.md
 | Doc | What |
 |---|---|
 | [管线总览](docs/管线总览.md) | one-page overview with diagram |
-| [使用说明](docs/使用说明.md) | step-by-step operation manual |
 | [Harmony出片设置](docs/Harmony出片设置.md) | character AOV export |
 | [Blender出片设置](docs/Blender出片设置.md) | environment passes + EXR output |
 | [AE合成清单](docs/AE合成清单.md) | compositing checklist |
